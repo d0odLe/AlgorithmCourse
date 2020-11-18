@@ -41,7 +41,7 @@ class Kangaroo():
         return fitness
 
     # 基因交叉函数
-    def propagation(self, Kangaroo):
+    def gen_crossover(self, Kangaroo):
         # 在交叉基因型前先将基因型还原到17位二进制
         bi_self_genotype = list(self.genotype)
         bi_Kangaroo_genotype = list(Kangaroo.genotype)
@@ -54,7 +54,7 @@ class Kangaroo():
         for _ in range(17-bi_Kangaroo_len):
             bi_Kangaroo_genotype.insert(0, '0')
         # 随机交17位中的3位
-        crossover_idx = random.randint(0, 15)
+        crossover_idx = random.randint(0, 14)
         for _ in range(3):
             temp = bi_self_genotype[crossover_idx]
             bi_self_genotype[crossover_idx] = bi_Kangaroo_genotype[crossover_idx]
@@ -66,9 +66,25 @@ class Kangaroo():
         # 将交叉后的基因型赋给了子类
         child_genotype_1.join(bi_self_genotype)
         child_genotype_2.join(bi_Kangaroo_genotype)
-        # 生成两个子袋鼠
+        # 生成两个子袋鼠的基因型
         return child_genotype_1, child_genotype_2
 
     # 基因变异
-    def gen_mutate(self):
-        pass
+    def gen_mutate(self, genotype):
+
+        # 以1/10的概率选择一个index
+        idx = random.randint(0, 17*10-1)
+        # 即是基因型从0到1或者从1到0的转变
+        if (idx>=0) and (idx<=16):
+            list_genotype = list(genotype)
+            if list_genotype[idx] == 0:
+                list_genotype[idx] = 1
+            else:
+                list_genotype[idx] = 0
+        res = ''
+        return res.join(list_genotype)
+        
+    # 产生子袋鼠
+    def propogation(self, genotype):
+        return Kangaroo(genotype)
+

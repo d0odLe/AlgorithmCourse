@@ -22,7 +22,7 @@ PROB_OF_MUTATE = 0.4
 NUM_OF_MUTATE = 5
 # 注意 为了方便两两配对，种群数量POPULATION只能为偶数个
 POPULATION = 1000
-ITERATION = 10
+ITERATION = 20
 
 # 基因序列数目，根据上下限和精度分配
 num_gens = math.ceil(math.log2((UPPER_LIMIT-LOWER_LIMIT)*pow(10, PRECISION)))

@@ -16,11 +16,13 @@ import math
 UPPER_LIMIT = 9
 LOWER_LIMIT = 0
 PRECISION = 4
-NUM_GEN_CROSS = 10
-PROB_OF_MUTATE = 0.9
+NUM_GEN_CROSS = 7
+PROB_OF_MUTATE = 0.4
+# 变异基因的个数
+NUM_OF_MUTATE = 5
 # 注意 为了方便两两配对，种群数量POPULATION只能为偶数个
-POPULATION = 100
-ITERATION = 20
+POPULATION = 1000
+ITERATION = 10
 
 # 基因序列数目，根据上下限和精度分配
 num_gens = math.ceil(math.log2((UPPER_LIMIT-LOWER_LIMIT)*pow(10, PRECISION)))
@@ -91,16 +93,19 @@ class Kangaroo():
         # 以PROB_OF_MUTATE的概率决定是否变异
         is_mutate = random.choices([True, False], weights=[PROB_OF_MUTATE, 1-PROB_OF_MUTATE], k=1)
         
-        # 即是基因型从0到1或者从1到0的转变
-        if is_mutate == True:
-            idx = random.randint(0, num_gens-1)
-            list_genotype = list(genotype)
-            if list_genotype[idx] == '0':
-                list_genotype[idx] = '1'
-            else:
-                list_genotype[idx] = '0'
-            mutate_gen = ''
-            res = mutate_gen.join(list_genotype)
+        # 增加基因变异次数
+        for _ in range(NUM_OF_MUTATE):
+            # 即是基因型从0到1或者从1到0的转变
+            if is_mutate == True:
+                idx = random.randint(0, num_gens-1)
+                list_genotype = list(genotype)
+                if list_genotype[idx] == '0':
+                    list_genotype[idx] = '1'
+                else:
+                    list_genotype[idx] = '0'
+                mutate_gen = ''
+                res = mutate_gen.join(list_genotype)
+                genotype = res
         return res
         
     # 产生子袋鼠
@@ -146,7 +151,7 @@ for j in range(ITERATION):
     # 对字典按照fitness值进行排序
     order_kg_fitness = sorted(kan_group_fitness.items(), key=lambda x:x[1])
     # 打印此次循环后的最大值
-    print('idx: {}, value: {}'.format(j, order_kg_fitness[len(order_kg_fitness)-1][1]))
+    print('idx: {}, value: {}'.format(j+1, order_kg_fitness[len(order_kg_fitness)-1][1]))
     # 根据idx从族群中除去fitness较小的袋鼠
     for i in range(POPULATION):
         # 只除去一半的袋鼠
@@ -156,3 +161,5 @@ for j in range(ITERATION):
     kan_group.clear()
     for value in kan_group_dic.values():
         kan_group.append(value)
+    # 打乱kan_group的顺序
+    random.shuffle(kan_group)
